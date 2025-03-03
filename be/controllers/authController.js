@@ -1,17 +1,15 @@
-import User, { IUser } from '../models/User';
+import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
-import { Request, Response } from 'express';
 
-const signToken = (id: String) => {
+const signToken = (id) => {
   // jwt token
-  return jwt.sign({ id }, process.env.JWT_SECRET as string, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: '7d',
   });
 };
 
-export const signup = async (req: Request, res: Response) => {
+export const signup = async (req, res) => {
   const { name, email, password, age, gender, genderPreference } = req.body;
-
   try {
     if (!name || !email || !password || !age || !gender || !genderPreference) {
       return res.status(400).json({
@@ -34,7 +32,7 @@ export const signup = async (req: Request, res: Response) => {
       });
     }
 
-    const newUser: IUser = await User.create({
+    const newUser = await User.create({
       name,
       email,
       password,
@@ -43,12 +41,12 @@ export const signup = async (req: Request, res: Response) => {
       genderPreference,
     });
 
-    const token = signToken(newUser._id.toString());
+    const token = signToken(newUser._id);
 
     res.cookie('jwt', token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
       httpOnly: true, // prevents XSS attacks
-      sameSite: 'strict', // prevents CSRF attacks,
+      sameSite: 'strict', // prevents CSRF attacks
       secure: process.env.NODE_ENV === 'production',
     });
 
@@ -61,8 +59,7 @@ export const signup = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
-
-export const login = async (req: Request, res: Response) => {
+export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     if (!email || !password) {
@@ -80,7 +77,8 @@ export const login = async (req: Request, res: Response) => {
         message: 'Invalid email or password',
       });
     }
-    const token = signToken(user._id.toString());
+
+    const token = signToken(user._id);
 
     res.cookie('jwt', token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
@@ -92,15 +90,13 @@ export const login = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       user,
-      token,
     });
   } catch (error) {
     console.log('Error in login controller:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
-
-export const logout = async (req: Request, res: Response) => {
+export const logout = async (req, res) => {
   res.clearCookie('jwt');
   res.status(200).json({ success: true, message: 'Logged out successfully' });
 };
