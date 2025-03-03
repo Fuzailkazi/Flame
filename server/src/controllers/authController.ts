@@ -92,6 +92,7 @@ export const login = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       user,
+      token,
     });
   } catch (error) {
     console.log('Error in login controller:', error);
@@ -99,4 +100,7 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const logout = async (req: Request, res: Response) => {};
+export const logout = async (req: Request, res: Response) => {
+  res.clearCookie('jwt');
+  res.status(200).json({ success: true, message: 'Logged out successfully' });
+};

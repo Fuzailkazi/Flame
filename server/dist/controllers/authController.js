@@ -68,7 +68,40 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.signup = signup;
-const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    try {
+        if (!email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'All fields are required',
+            });
+        }
+        const user = yield User_1.default.findOne({ email }).select('+password');
+        if (!user || !(yield user.matchPassword(password))) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid email or password',
+            });
+        }
+        const token = signToken(user._id.toString());
+        res.cookie('jwt', token, {
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+            httpOnly: true, // prevents XSS attacks
+            sameSite: 'strict', // prevents CSRF attacks
+            secure: process.env.NODE_ENV === 'production',
+        });
+        res.status(200).json({
+            success: true,
+            user,
+            token,
+        });
+    }
+    catch (error) {
+        console.log('Error in login controller:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
 exports.login = login;
 const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });
 exports.logout = logout;
