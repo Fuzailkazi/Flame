@@ -10,7 +10,7 @@ const SignUpForm = () => {
 
   const { signup, loading } = useAuthStore();
 
-  const { authUserName, authUserLastName } = useAuthStore();
+  // const { authUserName, authUserLastName } = useAuthStore();
 
   return (
     <form
