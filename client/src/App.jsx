@@ -5,6 +5,7 @@ import AuthPage from './pages/AuthPage';
 import ProfilePage from './pages/ProfilePage';
 import ChatPage from './pages/ChatPage';
 import { useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const { checkAuth, checkingAuth, authUser } = useAuthStore();
@@ -35,6 +36,7 @@ function App() {
           element={authUser ? <ChatPage /> : <Navigate to={'/auth'} />}
         />
       </Routes>
+      <Toaster />
     </div>
   );
 }
