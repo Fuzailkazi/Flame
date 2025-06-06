@@ -26,10 +26,10 @@ const SwipeArea = () => {
               />
             </figure>
             <div className='card-body bg-gradient-to-b from-white to-pink-50'>
-              <h2 className='card-title text-2xl text-gray-800'>
+              <h2 className='card-title text-2xl text-gray-800 p-4'>
                 {user.name}, {user.age}
               </h2>
-              <p className='text-gray-600'>{user.bio}</p>
+              <p className='text-gray-600 mx-4'>{user.bio}</p>
             </div>
           </div>
         </TinderCard>
