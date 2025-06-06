@@ -4,6 +4,8 @@ import Sidebar from '../components/Sidebar';
 import { Header } from '../components/Header';
 import { useMatchHook } from '../hooks/useMatchHook';
 import { Frown } from 'lucide-react';
+import SwipeArea from '../components/SwipeArea';
+import SwipeFeedback from '../components/SwipeFeedback';
 const HomePage = () => {
   const { isLoadingUserProfiles, getUserProfiles, userProfiles } =
     useMatchHook();
@@ -25,7 +27,12 @@ const HomePage = () => {
       <div className='flex-grow flex flex-col overflow-hidden'>
         <Header />
         <main className='flex-grow flex flex-col gap-10 justify-center items-center p-4 relative overflow-hidden'>
-          {userProfiles.length > 0 && !isLoadingUserProfiles && <>user match</>}
+          {userProfiles.length > 0 && !isLoadingUserProfiles && (
+            <>
+              <SwipeArea />
+              <SwipeFeedback />
+            </>
+          )}
 
           {userProfiles.length === 0 && !isLoadingUserProfiles && (
             <NoMoreProfiles />
