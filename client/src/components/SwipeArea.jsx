@@ -2,14 +2,18 @@ import React from 'react';
 import TinderCard from 'react-tinder-card';
 import { useMatchHook } from '../hooks/useMatchHook';
 const SwipeArea = () => {
-  const { userProfiles } = useMatchHook();
+  const { userProfiles, swipeRight, swipeLeft } = useMatchHook();
+  const handleSwipe = (dir, user) => {
+    if (dir === 'right') swipeRight(user);
+    else if (dir === 'left') swipeLeft(user);
+  };
   return (
     <div className='relative w-full max-w-sm h-[28rem]'>
       {userProfiles.map((user) => (
         <TinderCard
           className='absolute shadow-none'
           key={user._id}
-          // onSwipe={(dir) => handleSwipe(dir, user)}
+          onSwipe={(dir) => handleSwipe(dir, user)}
           swipeRequirementType='position'
           swipeThreshold={100}
           preventSwipe={['up', 'down']}
