@@ -9,6 +9,7 @@ import matchRouter from './routes/matchRoutes.js';
 import messageRouter from './routes/messageRoutes.js';
 
 import { connectDB } from './config/db.js';
+import { initializeSocket } from './socket/socket.server.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -26,6 +27,6 @@ app.use('/api/users', userRouter);
 app.use('/api/matches', matchRouter);
 app.use('/api/messages', messageRouter);
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log('Server running on port ' + PORT), connectDB();
 });

@@ -1,9 +1,9 @@
-import { connect } from 'mongoose';
 import { Server } from 'socket.io';
 
 let io;
 
 const connectedUsers = new Map();
+// { userId: socketId }
 
 export const initializeSocket = (httpServer) => {
   io = new Server(httpServer, {
@@ -22,13 +22,13 @@ export const initializeSocket = (httpServer) => {
   });
 
   io.on('connection', (socket) => {
-    console.log(`user connected with id: ${socket.id}`);
+    console.log(`User connected with socket id: ${socket.id}`);
     connectedUsers.set(socket.userId, socket.id);
-  });
 
-  io.on('disconnect', () => {
-    console.log(`user disconnected with id:${socket.id}`);
-    connectedUsers.delete(socket.userId);
+    socket.on('disconnect', () => {
+      console.log(`User disconnected with socket id: ${socket.id}`);
+      connectedUsers.delete(socket.userId);
+    });
   });
 };
 
