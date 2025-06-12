@@ -7,12 +7,26 @@ import { Frown } from 'lucide-react';
 import SwipeArea from '../components/SwipeArea';
 import SwipeFeedback from '../components/SwipeFeedback';
 const HomePage = () => {
-  const { isLoadingUserProfiles, getUserProfiles, userProfiles } =
-    useMatchHook();
+  const {
+    isLoadingUserProfiles,
+    getUserProfiles,
+    userProfiles,
+    subscribeToNewMatches,
+    unsubscribeFromNewMatches,
+  } = useMatchHook();
+
+  const authUser = useAuthStore();
 
   useEffect(() => {
     getUserProfiles();
   }, [getUserProfiles]);
+
+  useEffect(() => {
+    authUser && subscribeToNewMatches();
+    return () => {
+      unsubscribeFromNewMatches();
+    };
+  }, [subscribeToNewMatches, unsubscribeFromNewMatches]);
 
   console.log(userProfiles);
 
